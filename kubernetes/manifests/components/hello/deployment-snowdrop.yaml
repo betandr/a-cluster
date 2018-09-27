@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowdrop
+  namespace: default
+  labels:
+    app: hello
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+      - name: hello
+        image: hub.docker.com/google/golang-hello:latest
+        ports:
+        - containerPort: 9292
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9292
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9292
+        envFrom:
+        - configMapRef:
+            name: hello-config
+        # - secretRef:
+        #     name: andr-auth

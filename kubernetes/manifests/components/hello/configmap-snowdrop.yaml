@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-config
+  namespace: default
+data:
+  SHOW_HEADERS: "1"

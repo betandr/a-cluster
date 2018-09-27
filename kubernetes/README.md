@@ -1,5 +1,3 @@
-# Andr Cluster
-
 # Connected Data Infrastructure
 
 ## Ensure Correct Cluster
@@ -51,7 +49,7 @@ So comment out the lines such as:
 
 ```
 # tls:
-# - secretName: andr-tls
+# - secretName: datalab-rocks-tls
 ```
 ...then run:
 ```
@@ -59,20 +57,21 @@ kubectl apply -f manifests/ingress/ingress.yaml
 ```
 Obtain the external IP address of the ingress (this will some time):
 ```
-kubectl get ing andr-ingress
+kubectl get ing datalab-rocks-ingress
 ```
 
 When the external IP is available, visit
-GCP Cloud DNS and update `andr.io.` A record with the new IP (NB: you should probably
+[GCP Cloud DNS](https://console.cloud.google.com/net-services/dns/zones/datalab-rocks?project=bbc-datalab)
+and update `api.datalab.rocks.` A record with the new IP (NB: you should probably
 only do this when you are sure that you want to receive traffic on this cluster).
 
-Visiting `andr.io` will, for some time, either point to the previous
+Visiting `api.datalab.rocks` will, for some time, either point to the previous
 address or return a Google 404. It will take some time to update the
 load-balancers and is normal.
 
 __NOTE:__ The cert-manager won't be able to create the certificate until you're
 actually accepting traffic to the cluster so if you're migrating from an old
-cluster you may need to create the `andr-tls` secret manually or accept
+cluster you may need to create the `datalab-rocks-tls` secret manually or accept
 an amount of outage as you update DNS records and receive a new certificate on
 your new cluster.
 
@@ -93,16 +92,18 @@ uncomment the lines in `manifests/ingress/ingress.yaml` and re-run the `apply`
 command.
 
 ## Create Environment-specific Config
-There is currently no environment-specific config, although they would live at:
-_manifests/environment/(production|stage)/configmap-environment.yaml_
+This is config that changes between environments (pick `production` _or_ `stage`).
+```
+kubectl apply -f manifests/environment/(production|stage)/configmap-environment.yaml
+```
 
 ## Create Config for all Environments
-There is currently no all-environment-specific secrets, although they would live at:
+There is currently no all-environment-specific config, although it would live at:
 _manifests/environment/all/secrets-environment.yaml_
 
 ## Create Environment-specific Secrets
 There are currently no environment-specific secrets, although they would live at:
-_manifests/environment/(production|stage)/secrets-environment.yaml_
+_manifests/environment/all/secrets-environment.yaml_
 
 ## Create Secrets For All Environments
 Currently we only have UAS secrets:

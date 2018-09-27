@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: datalab-rocks-ingress
+  annotations:
+    certmanager.k8s.io/cluster-issuer: letsencrypt-issuer
+spec:
+  rules:
+  - host: andr.io
+    http:
+      paths:
+      - backend:
+          serviceName: hello
+          servicePort: 5000
+  tls:
+  - secretName: andr-tls
