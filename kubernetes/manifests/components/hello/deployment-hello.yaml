@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: snowdrop
+  name: hello
   namespace: default
   labels:
     app: hello
@@ -17,17 +17,17 @@ spec:
     spec:
       containers:
       - name: hello
-        image: hub.docker.com/google/golang-hello:latest
+        image: google/golang-hello:latest
         ports:
-        - containerPort: 9292
+        - containerPort: 8080
         readinessProbe:
           httpGet:
             path: /
-            port: 9292
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 9292
+            port: 8080
+        # livenessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 8080
         envFrom:
         - configMapRef:
             name: hello-config

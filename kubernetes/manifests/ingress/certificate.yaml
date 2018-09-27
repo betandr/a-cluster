@@ -1,7 +1,7 @@
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: datalab-rocks-certificate
+  name: andr-certificate
   namespace: default
 spec:
   secretName: andr-tls

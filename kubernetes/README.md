@@ -19,7 +19,7 @@ kubectl config use-context gke_gcp-project_europe-west2-c_cluster-name
 ## Install Helm
 Helm is used to install tooling such as `cert-manager`.
 ```
-kubectl create -f manifests/auth/tiller-rbac-config.yaml
+kubectl create -f kubernetes/manifests/auth/tiller-rbac-config.yaml
 ```
 ```
 helm init --service-account tiller
@@ -53,7 +53,7 @@ So comment out the lines such as:
 ```
 ...then run:
 ```
-kubectl apply -f manifests/ingress/ingress.yaml
+kubectl apply -f kubernetes/manifests/ingress/ingress.yaml
 ```
 Obtain the external IP address of the ingress (this will some time):
 ```
@@ -81,34 +81,34 @@ your new cluster.
 helm install --name cert-manager --namespace kube-system stable/cert-manager
 ```
 ```
-kubectl apply -f manifests/ingress/acme-issuer.yaml
+kubectl apply -f kubernetes/manifests/ingress/acme-issuer.yaml
 ```
 ```
-kubectl apply -f manifests/ingress/certificate.yaml
+kubectl apply -f kubernetes/manifests/ingress/certificate.yaml
 ```
 
 __ACTION:__ At this point you should set the ingress controller back to using TLS so
-uncomment the lines in `manifests/ingress/ingress.yaml` and re-run the `apply`
+uncomment the lines in `kubernetes/manifests/ingress/ingress.yaml` and re-run the `apply`
 command.
 
 ## Create Environment-specific Config
 This is config that changes between environments (pick `production` _or_ `stage`).
 ```
-kubectl apply -f manifests/environment/(production|stage)/configmap-environment.yaml
+kubectl apply -f kubernetes/manifests/environment/(production|stage)/configmap-environment.yaml
 ```
 
 ## Create Config for all Environments
 There is currently no all-environment-specific config, although it would live at:
-_manifests/environment/all/secrets-environment.yaml_
+_kubernetes/manifests/environment/all/secrets-environment.yaml_
 
 ## Create Environment-specific Secrets
 There are currently no environment-specific secrets, although they would live at:
-_manifests/environment/all/secrets-environment.yaml_
+_kubernetes/manifests/environment/all/secrets-environment.yaml_
 
 ## Create Secrets For All Environments
 Currently we only have UAS secrets:
 ```
-kubectl apply -f manifests/environment/all/secrets-uas.yaml
+kubectl apply -f kubernetes/manifests/environment/all/secrets-uas.yaml
 ```
 
 ## Create Components
@@ -121,21 +121,21 @@ the manifest are applied to rather than the service names.
 
 The following commands should be run for all component_names in components:
 ```
-kubectl apply -f manifests/components/(component_name)/configmap-(component_name).yaml
+kubectl apply -f kubernetes/manifests/components/(component_name)/configmap-(component_name).yaml
 ```
 Create Kubernetes deployment which maps the container image to container ports,
 configmaps, and health-checks etc.
 ```
-kubectl apply -f manifests/components/(component_name)/deployment-(component_name).yaml
+kubectl apply -f kubernetes/manifests/components/(component_name)/deployment-(component_name).yaml
 ```
 Create Horizontal Pod Autoscaler which encapsulates the autoscaling rules for
 this service.
 ```
-kubectl apply -f manifests/components/(component_name)/hpa-(component_name).yaml
+kubectl apply -f kubernetes/manifests/components/(component_name)/hpa-(component_name).yaml
 ```
 Create Kubernetes service which exposes the component pod to traffic. Services
 should not have external access directly but instead run through an ingress
 controller.
 ```
-kubectl apply -f manifests/components/(component_name)/service-(component_name).yaml
+kubectl apply -f kubernetes/manifests/components/(component_name)/service-(component_name).yaml
 ```

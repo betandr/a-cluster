@@ -5,7 +5,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: datalab@bbc.co.uk
+    email: bet@andr.io
     privateKeySecretRef:
       name: letsencrypt
     http01: {}
