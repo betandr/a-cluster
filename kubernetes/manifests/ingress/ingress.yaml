@@ -10,6 +10,12 @@ spec:
     http:
       paths:
       - backend:
+          serviceName: nyandr
+          servicePort: 80
+  - host: hello.andr.io
+    http:
+      paths:
+      - backend:
           serviceName: hello
           servicePort: 80
   tls:
