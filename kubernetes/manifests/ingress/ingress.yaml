@@ -11,6 +11,6 @@ spec:
       paths:
       - backend:
           serviceName: hello
-          servicePort: 8080
+          servicePort: 80
   tls:
   - secretName: andr-tls

@@ -28,6 +28,51 @@ kubectl create -f kubernetes/manifests/auth/tiller-rbac-config.yaml
 helm init --service-account tiller
 ```
 
+## Create Environment-specific Config
+There is currently no environment-specific config, although they would live at:
+_kubernetes/manifests/environment/(production|stage)/configmap-environment.yaml_
+
+## Create Config for all Environments
+There is currently no all-environment-specific secrets, although they would live at:
+_kubernetes/manifests/environment/all/secrets-environment.yaml_
+
+## Create Environment-specific Secrets
+There are currently no environment-specific secrets, although they would live at:
+_kubernetes/manifests/environment/(production|stage)/secrets-environment.yaml_
+
+## Create Secrets For All Environments
+There are currently no environment-specific secrets, although they would live at:
+_kubernetes/manifests/environment/all/secrets-environment.yaml_
+
+## Create Components
+Config specific to the component, for example _wiring_ such as other services
+like `API_HOST: "foo:50051"`.
+
+__NOTE:__ services should not use environment naming such as `foo-stage` but
+naming such as `foo`. This is because an environment is defined by the cluster
+the manifest are applied to rather than the service names.
+
+The following commands should be run for all component_names in components:
+```
+kubectl apply -f kubernetes/manifests/components/(component_name)/configmap-(component_name).yaml
+```
+Create Kubernetes deployment which maps the container image to container ports,
+configmaps, and health-checks etc.
+```
+kubectl apply -f kubernetes/manifests/components/(component_name)/deployment-(component_name).yaml
+```
+Create Horizontal Pod Autoscaler which encapsulates the autoscaling rules for
+this service.
+```
+kubectl apply -f kubernetes/manifests/components/(component_name)/hpa-(component_name).yaml
+```
+Create Kubernetes service which exposes the component pod to traffic. Services
+should not have external access directly but instead run through an ingress
+controller.
+```
+kubectl apply -f kubernetes/manifests/components/(component_name)/service-(component_name).yaml
+```
+
 ## Create Ingress Controller
 The ingress controller is the entry point into the Kubernetes cluster over port
 80 (HTTP) and 443 (HTTPS), the latter using the certificate created by the
@@ -92,50 +137,3 @@ kubectl apply -f kubernetes/manifests/ingress/certificate.yaml
 __ACTION:__ At this point you should set the ingress controller back to using TLS so
 uncomment the lines in `kubernetes/manifests/ingress/ingress.yaml` and re-run the `apply`
 command.
-
-## Create Environment-specific Config
-There is currently no environment-specific config, although they would live at:
-_kubernetes/manifests/environment/(production|stage)/configmap-environment.yaml_
-
-## Create Config for all Environments
-There is currently no all-environment-specific secrets, although they would live at:
-_kubernetes/manifests/environment/all/secrets-environment.yaml_
-
-## Create Environment-specific Secrets
-There are currently no environment-specific secrets, although they would live at:
-_kubernetes/manifests/environment/(production|stage)/secrets-environment.yaml_
-
-## Create Secrets For All Environments
-Currently we only have UAS secrets:
-```
-kubectl apply -f kubernetes/manifests/environment/all/secrets-uas.yaml
-```
-
-## Create Components
-Config specific to the component, for example _wiring_ such as other services
-like `API_HOST: "foo:50051"`.
-
-__NOTE:__ services should not use environment naming such as `foo-stage` but
-naming such as `foo`. This is because an environment is defined by the cluster
-the manifest are applied to rather than the service names.
-
-The following commands should be run for all component_names in components:
-```
-kubectl apply -f kubernetes/manifests/components/(component_name)/configmap-(component_name).yaml
-```
-Create Kubernetes deployment which maps the container image to container ports,
-configmaps, and health-checks etc.
-```
-kubectl apply -f kubernetes/manifests/components/(component_name)/deployment-(component_name).yaml
-```
-Create Horizontal Pod Autoscaler which encapsulates the autoscaling rules for
-this service.
-```
-kubectl apply -f kubernetes/manifests/components/(component_name)/hpa-(component_name).yaml
-```
-Create Kubernetes service which exposes the component pod to traffic. Services
-should not have external access directly but instead run through an ingress
-controller.
-```
-kubectl apply -f kubernetes/manifests/components/(component_name)/service-(component_name).yaml
-```
