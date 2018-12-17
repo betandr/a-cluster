@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello
+  name: schwag-exchange
   namespace: default
   labels:
-    app: hello
+    app: schwag-exchange
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hello
+      app: schwag-exchange
   template:
     metadata:
       labels:
-        app: hello
+        app: schwag-exchange
     spec:
       containers:
       - name: hello
-        image: betandr/gollo-world:latest
+        image: gcr.io/bet-andr/schwag-exhange-web:v0.2
         ports:
         - containerPort: 8888
         readinessProbe:
@@ -28,8 +28,3 @@ spec:
           httpGet:
             path: /
             port: 8888
-        envFrom:
-        - configMapRef:
-            name: hello-config
-        # - secretRef:
-        #     name: andr-auth

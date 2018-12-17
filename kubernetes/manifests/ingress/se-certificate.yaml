@@ -1,0 +1,19 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: schwag-exchange-certificate
+  namespace: default
+spec:
+  secretName: schwag-exchange-tls
+  issuerRef:
+    name: letsencrypt-issuer
+    kind: ClusterIssuer
+  commonName: schwag.exchange
+  dnsNames:
+  - schwag.exchange
+  acme:
+    config:
+    - http01:
+        ingress: schwag-exchange-ingress
+      domains:
+      - schwag.exchange

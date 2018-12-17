@@ -11,11 +11,9 @@ spec:
   commonName: andr.io
   dnsNames:
   - andr.io
-  - hello.andr.io
   acme:
     config:
     - http01:
         ingress: andr-ingress
       domains:
       - andr.io
-      - hello.andr.io

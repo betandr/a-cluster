@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: hello-config
-  namespace: default
-data:
-  FOO: "1"
